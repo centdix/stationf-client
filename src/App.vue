@@ -19,7 +19,7 @@
         <button @click="date_search" class="btn-secondary col-2 offset-md-2">Search</button>
       </div>
     </div>
-    <RoomsList :start_date="start_date" :end_date="end_date"
+    <RoomsList :start_date="start_search" :end_date="end_search"
       :available_rooms="available_rooms" @book="date_search"></RoomsList>
     <hr>
     <BookingsList :bookings="bookings" @deleteBooking="getBookings"></BookingsList>
@@ -45,6 +45,8 @@
         date: "",
         time: "",
         duration: "",
+        start_search: "",
+        end_search: "",
         available_rooms: [],
         rooms: [],
         bookings: [],
@@ -75,12 +77,12 @@
         this.bookings = data;
       },
       async date_search() {
-        let start_value = this.start_date;
-        let end_value = this.end_date;
-        if (start_value === null || end_value === null || start_value.isBefore(new moment()) || start_value.isSame(end_value)) {
+        if (this.start_date === null || this.end_value === null || this.start_date.isBefore(new moment()) || this.start_date.isSame(this.end_value)) {
           this.$toasted.error('Invalid or incomplete inputs').goAway(1500);
           return ;
         }
+        this.start_search = this.start_date;
+        this.end_search = this.end_date;
         let available = [...this.rooms];
         let url = process.env.VUE_APP_API_URL;
         let response = await fetch(url + 'bookings', { method: 'get' })
@@ -89,13 +91,14 @@
         this.bookings.forEach((b) => {
           let start = moment(b.start_date).subtract(1, 'minutes');
           let end = moment(b.end_date).add(1, 'minutes');
-          if (start_value.isBetween(start, end) || end_value.isBetween(start, end))
+          if (this.start_date.isBetween(start, end) || this.end_date.isBetween(start, end)
+            || start.isBetween(this.start_date, this.end_date) || end.isBetween(this.start_date, this.end_date))
           {
             let i = this.findByName(available, b.room_name);
             available.splice(i, 1);
           }
         })
-        this.available_rooms = available; 
+        this.available_rooms = available;
       },
     },
     computed: {
