@@ -129,7 +129,6 @@
     margin-top: 30px;
   }
   .tp {
-    flex: 0 0 25%;
-    max-width: 100%;
+    padding-left: 0;
   }
 </style>
