@@ -1,25 +1,22 @@
 <template>
-  <div id="results" class="mt-4" v-if="available_rooms.length > 0">
-    <hr>
+  <div id="results" class="m-4">
     <div class="row ml-1">
-      <h5>Rooms available from {{ start_date | moment("L, HH:mm") }} to {{ end_date | moment("L, HH:mm") }} :</h5>
+      <h5>Rooms available from {{ start_date | moment("MMMM DD, HH:mm") }} to {{ end_date | moment("MMMM DD, HH:mm") }} :</h5>
     </div>
-    <div class="row mt-3">
-      <div class="col-6">
-        <span>Minimum capacity: {{ min_cap }}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4">
+    <div class="row mt-3 mx-1">
+      <div class="col">
+        <span>Minimum capacity: {{ min_cap }}</span><br>
         <input type="range" class="form-control-range" id="formControlRange" min="0" max="50" v-model="min_cap">
       </div>
-      <div class="col-3 offset-md-2">
-        <input class="form-check-input" type="checkbox" v-model="tv_selected" id="flexCheckChecked">
-        <label class="form-check-label" for="flexCheckChecked">TV</label>
+      <div class="col">
+        <br>
+        <input class="form-check-input ch" type="checkbox" v-model="tv_selected" id="tv">
+        <label class="form-check-label" for="tv">TV</label>
       </div>
-      <div class="col-3">
-        <input class="form-check-input" type="checkbox" v-model="retro_selected" id="flexCheckChecked">
-        <label class="form-check-label" for="flexCheckChecked">Retro Projecteur</label>
+      <div class="col">
+        <br>
+        <input class="form-check-input ch" type="checkbox" v-model="retro_selected" id="retro">
+        <label class="form-check-label" for="retro">Retro Projecteur</label>
       </div>  
     </div>
     <div class="card mt-1" v-for="room in filteredRooms" :key="room.id">
@@ -111,5 +108,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
+  .ch {
+    margin-right: 10px;
+  }
 </style>

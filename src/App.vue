@@ -1,8 +1,8 @@
 <template>
   <div id="app" class="container">
     <h1 class="text-center">Book a meeting room</h1>
-    <div id="date_search">
-      <h3 class="text-center m-4">Search by date and time</h3>
+    <div id="date_search" class="m-4">
+      <h3 class="text-center">Search by date and time</h3>
       <div class="row mt-4 justify-content-center">
         <label class="col-3">When: </label>
         <input type="date" id="date" class="col-4" v-model="date">
@@ -19,9 +19,14 @@
         <button @click="date_search" class="btn-secondary col-2 offset-md-2">Search</button>
       </div>
     </div>
-    <RoomsList :start_date="start_search" :end_date="end_search"
-      :available_rooms="available_rooms" @book="date_search"></RoomsList>
+    <div class="row m-4"></div>
     <hr>
+    <h6 v-if="just_landed" class="text-center m-4">Start searching to show available rooms</h6>
+    <RoomsList :start_date="start_search" :end_date="end_search"
+      :available_rooms="available_rooms" @book="date_search"
+      v-if="available_rooms.length > 0"></RoomsList>
+    <hr>
+    <div class="row m-2"></div>
     <BookingsList :bookings="bookings" @deleteBooking="getBookings"></BookingsList>
   </div>
 </template>
@@ -42,6 +47,7 @@
     },
     data() {
       return {
+        just_landed: true,
         date: "",
         time: "",
         duration: "",
@@ -77,10 +83,11 @@
         this.bookings = data;
       },
       async date_search() {
-        if (this.start_date === null || this.end_value === null || this.start_date.isBefore(new moment()) || this.start_date.isSame(this.end_value)) {
+        if (this.start_date === null || this.end_date === null || this.start_date.isBefore(new moment()) || this.start_date.isSame(this.end_date)) {
           this.$toasted.error('Invalid or incomplete inputs').goAway(1500);
           return ;
         }
+        this.just_landed = false;
         this.start_search = this.start_date;
         this.end_search = this.end_date;
         let available = [...this.rooms];
